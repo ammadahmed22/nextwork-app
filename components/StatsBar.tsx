@@ -27,7 +27,7 @@ export default function StatsBar() {
         >
           <Text
             className="text-xl font-inter-bold"
-            style={{ color: "#D6FF3F" }}
+            style={{ color: "#FFFFFF" }}
           >
             {stat.value}
           </Text>

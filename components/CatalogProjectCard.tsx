@@ -76,15 +76,15 @@ export default function CatalogProjectCard({ project }: Props) {
             <View
               className="flex-row items-center rounded-full px-2.5 py-1"
               style={{
-                backgroundColor: "#4CD96420",
+                backgroundColor: "#9CA3AF20",
                 borderWidth: 1,
-                borderColor: "#4CD96440",
+                borderColor: "#9CA3AF40",
               }}
             >
-              <Ionicons name="checkmark-circle" size={11} color="#4CD964" />
+              <Ionicons name="checkmark-circle" size={11} color="#9CA3AF" />
               <Text
                 className="text-xs font-inter-semi ml-1"
-                style={{ color: "#4CD964" }}
+                style={{ color: "#9CA3AF" }}
               >
                 Completed
               </Text>
@@ -113,7 +113,7 @@ export default function CatalogProjectCard({ project }: Props) {
             onPress={handlePress}
             className="rounded-xl px-4 py-2"
             style={{
-              backgroundColor: isCompleted ? "transparent" : "#D6FF3F",
+              backgroundColor: isCompleted ? "transparent" : "#1B1918",
               borderWidth: isCompleted ? 1 : 0,
               borderColor: isCompleted ? "#E6E6E6" : undefined,
             }}
@@ -121,7 +121,7 @@ export default function CatalogProjectCard({ project }: Props) {
           >
             <Text
               className="text-sm font-inter-semi"
-              style={{ color: isCompleted ? "#6A6A6A" : "#1B1918" }}
+              style={{ color: isCompleted ? "#6A6A6A" : "#FFFFFF" }}
             >
               {isCompleted ? "Review" : "Start →"}
             </Text>

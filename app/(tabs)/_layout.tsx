@@ -29,7 +29,7 @@ export default function TabLayout() {
           // No fixed height — let expo-router + safe-area handle it naturally
           paddingTop: 10,
         },
-        tabBarActiveTintColor: "#D6FF3F",
+        tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#6A6A6A",
         tabBarLabelStyle: {
           fontFamily: "Inter_600SemiBold",

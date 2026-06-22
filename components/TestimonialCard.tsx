@@ -28,7 +28,7 @@ export default function TestimonialCard({ testimonial, width }: TestimonialCardP
         style={{
           fontSize: 48,
           lineHeight: 40,
-          color: "#D6FF3F",
+          color: "#1B1918",
           fontFamily: "serif",
           marginBottom: 8,
         }}

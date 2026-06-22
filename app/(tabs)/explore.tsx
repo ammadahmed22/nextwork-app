@@ -78,7 +78,7 @@ export default function ExploreScreen() {
         ListEmptyComponent={
           loading ? (
             <View className="items-center py-24">
-              <ActivityIndicator size="large" color="#D6FF3F" />
+              <ActivityIndicator size="large" color="#1B1918" />
               <Text className="text-nw-muted text-sm font-inter mt-4">
                 Loading 336 projects…
               </Text>
