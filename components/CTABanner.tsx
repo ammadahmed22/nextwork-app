@@ -22,7 +22,7 @@ export default function CTABanner() {
 
       <TouchableOpacity
         className="rounded-xl h-14 items-center justify-center mb-3"
-        style={{ backgroundColor: "#D6FF3F" }}
+        style={{ backgroundColor: "#FFFFFF" }}
         onPress={() => Linking.openURL("https://learn.nextwork.org")}
         activeOpacity={0.85}
         accessibilityRole="button"

@@ -55,7 +55,8 @@ export default function CategoryFilter({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 4 }}
+      style={{ height: 48 }}
+      contentContainerStyle={{ paddingLeft: 16, paddingRight: 24, paddingVertical: 4, alignItems: 'center' }}
       className="mb-4"
     >
       {items.map(({ label, emoji }) => {

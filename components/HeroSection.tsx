@@ -18,11 +18,11 @@ export default function HeroSection() {
       >
         <View
           className="w-1.5 h-1.5 rounded-full mr-2"
-          style={{ backgroundColor: "#D6FF3F" }}
+          style={{ backgroundColor: "#FFFFFF" }}
         />
         <Text
           className="text-xs font-inter-semi tracking-widest uppercase"
-          style={{ color: "#D6FF3F" }}
+          style={{ color: "#FFFFFF" }}
         >
           190K+ Learners Building
         </Text>
@@ -33,8 +33,8 @@ export default function HeroSection() {
         Build Real{"\n"}Projects.{" "}
         <Text
           style={{
-            color: "#1B1918",
-            backgroundColor: "#D6FF3F",
+            color: "#FFFFFF",
+            backgroundColor: "#1B1918",
             borderRadius: 4,
           }}
         >
@@ -75,7 +75,7 @@ export default function HeroSection() {
       {/* Primary CTA */}
       <TouchableOpacity
         className="rounded-xl py-4 items-center mb-3"
-        style={{ backgroundColor: "#D6FF3F" }}
+        style={{ backgroundColor: "#1B1918" }}
         onPress={() => Linking.openURL("https://learn.nextwork.org")}
         activeOpacity={0.85}
         accessibilityRole="button"
@@ -83,7 +83,7 @@ export default function HeroSection() {
       >
         <Text
           className="text-[15px] font-inter-bold"
-          style={{ color: "#1B1918" }}
+          style={{ color: "#FFFFFF" }}
         >
           Start Building for Free →
         </Text>

@@ -94,15 +94,15 @@ export default function ProjectCard({ project, compact = false }: ProjectCardPro
             </View>
             <View
               className="flex-row items-center rounded-xl px-4 py-2.5"
-              style={{ backgroundColor: "#D6FF3F" }}
+              style={{ backgroundColor: "#1B1918" }}
             >
               <Text
                 className="text-sm font-inter-bold mr-1"
-                style={{ color: "#1B1918" }}
+                style={{ color: "#FFFFFF" }}
               >
                 Start
               </Text>
-              <Ionicons name="arrow-forward" size={13} color="#1B1918" />
+              <Ionicons name="arrow-forward" size={13} color="#FFFFFF" />
             </View>
           </View>
 
