@@ -33,6 +33,10 @@ export default function RootLayout() {
         name="project/[id]"
         options={{ animation: "slide_from_right" }}
       />
+      <Stack.Screen
+        name="category/[name]"
+        options={{ animation: "slide_from_right" }}
+      />
     </Stack>
   );
 }
