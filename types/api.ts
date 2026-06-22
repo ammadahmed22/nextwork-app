@@ -12,8 +12,18 @@ export interface SearchEntity {
 }
 
 export interface SearchResultGroup {
+  title: string;
   description: string;
+  imageUrl: string | null;
+  type: string;
   entities: SearchEntity[];
+}
+
+/** A parsed category tile for the Explore grid */
+export interface CategoryGroup {
+  title: string;
+  imageUrl: string;
+  count: number;
 }
 
 export interface SearchResponse {

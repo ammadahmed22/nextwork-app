@@ -15,7 +15,7 @@ import { getCategoryImage } from "../../constants/categoryImages";
 import { useProjectCatalog } from "../../hooks/useProjectCatalog";
 
 export default function CategoryScreen() {
-  const { name } = useLocalSearchParams<{ name: string }>();
+  const { name, imageUrl } = useLocalSearchParams<{ name: string; imageUrl?: string }>();
   const router = useRouter();
   const categoryName = decodeURIComponent(name ?? "");
   const { projects, loading, error, refresh } = useProjectCatalog();
@@ -25,7 +25,7 @@ export default function CategoryScreen() {
     [projects, categoryName]
   );
 
-  const imageUri = getCategoryImage(categoryName);
+  const imageUri = imageUrl ?? getCategoryImage(categoryName);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F5F3" }} edges={["top"]}>

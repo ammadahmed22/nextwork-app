@@ -47,6 +47,13 @@ export const api = {
     return get<SearchResponse>(`/search?${params.toString()}`);
   },
 
+  /** Category groups for the Explore grid (with titles and imageUrls) */
+  searchGroups: (type?: "roadmap" | "specialty" | "tool") => {
+    const params = new URLSearchParams({ q: "" });
+    if (type) params.set("type", type);
+    return get<SearchResponse>(`/search?${params.toString()}`);
+  },
+
   /** Ammad's completed portfolio projects */
   getPortfolio: () => get<Portfolio>("/portfolio"),
 

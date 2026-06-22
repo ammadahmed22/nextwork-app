@@ -1,34 +1,39 @@
 import { useRouter } from "expo-router";
 import { FlatList, ImageBackground, Text, TouchableOpacity, View } from "react-native";
-import { getCategoryImage } from "../constants/categoryImages";
+import type { CategoryGroup } from "../types/api";
 
 interface Props {
-  categories: string[];
-  projectCounts: Record<string, number>;
+  groups: CategoryGroup[];
 }
 
-function CategoryTile({ name, count }: { name: string; count: number }) {
+function CategoryTile({ group }: { group: CategoryGroup }) {
   const router = useRouter();
-  const imageUri = getCategoryImage(name);
 
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/category/${encodeURIComponent(name)}`)}
+      onPress={() =>
+        router.push({
+          pathname: `/category/${encodeURIComponent(group.title)}` as never,
+          params: { imageUrl: group.imageUrl },
+        })
+      }
       activeOpacity={0.85}
       style={{ flex: 1, margin: 6, borderRadius: 14, overflow: "hidden", height: 120 }}
       accessibilityRole="button"
-      accessibilityLabel={`${name}, ${count} project${count !== 1 ? "s" : ""}`}
+      accessibilityLabel={`${group.title}, ${group.count} project${group.count !== 1 ? "s" : ""}`}
     >
       <ImageBackground
-        source={{ uri: imageUri }}
+        source={{ uri: group.imageUrl }}
         style={{ flex: 1, justifyContent: "flex-end" }}
         resizeMode="cover"
       >
-        {/* Dark gradient overlay */}
         <View
           style={{
             position: "absolute",
-            top: 0, left: 0, right: 0, bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor: "rgba(0,0,0,0.45)",
           }}
         />
@@ -42,7 +47,7 @@ function CategoryTile({ name, count }: { name: string; count: number }) {
             }}
             numberOfLines={2}
           >
-            {name}
+            {group.title}
           </Text>
           <Text
             style={{
@@ -52,7 +57,7 @@ function CategoryTile({ name, count }: { name: string; count: number }) {
               marginTop: 2,
             }}
           >
-            {count} project{count !== 1 ? "s" : ""}
+            {group.count} project{group.count !== 1 ? "s" : ""}
           </Text>
         </View>
       </ImageBackground>
@@ -60,20 +65,15 @@ function CategoryTile({ name, count }: { name: string; count: number }) {
   );
 }
 
-export default function CategoryGrid({ categories, projectCounts }: Props) {
-  // Filter out "All" — it's not a real category tile
-  const items = categories.filter((c) => c !== "All");
-
+export default function CategoryGrid({ groups }: Props) {
   return (
     <FlatList
-      data={items}
-      keyExtractor={(item) => item}
+      data={groups}
+      keyExtractor={(item) => item.title}
       numColumns={2}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 32, paddingTop: 4 }}
-      renderItem={({ item }) => (
-        <CategoryTile name={item} count={projectCounts[item] ?? 0} />
-      )}
+      renderItem={({ item }) => <CategoryTile group={item} />}
     />
   );
 }
