@@ -60,7 +60,7 @@ export default function ProfileScreen() {
                 borderRadius: 48,
                 marginBottom: 16,
                 borderWidth: 3,
-                borderColor: "#D6FF3F",
+                borderColor: "#1B1918",
               }}
               onError={() => setAvatarError(true)}
             />
@@ -71,7 +71,7 @@ export default function ProfileScreen() {
             >
               <Text
                 className="text-4xl font-inter-bold"
-                style={{ color: "#D6FF3F" }}
+                style={{ color: "#FFFFFF" }}
               >
                 {CURRENT_USER.initials}
               </Text>
@@ -115,7 +115,7 @@ export default function ProfileScreen() {
             >
               <Text
                 className="text-2xl font-inter-bold"
-                style={{ color: "#D6FF3F" }}
+                style={{ color: "#FFFFFF" }}
               >
                 {stat.value}
               </Text>
@@ -173,7 +173,7 @@ export default function ProfileScreen() {
             <Text className="text-nw-white text-[17px] font-inter-bold">
               Completed Projects
             </Text>
-            {loading && <ActivityIndicator size="small" color="#D6FF3F" />}
+            {loading && <ActivityIndicator size="small" color="#1B1918" />}
           </View>
 
           <View
@@ -215,7 +215,7 @@ export default function ProfileScreen() {
                       </Text>
                     </View>
                   </View>
-                  <Ionicons name="checkmark-circle" size={20} color="#4CD964" />
+                  <Ionicons name="checkmark-circle" size={20} color="#9CA3AF" />
                 </TouchableOpacity>
               );
             })}
@@ -229,7 +229,7 @@ export default function ProfileScreen() {
             >
               <Text
                 className="text-sm font-inter-semi"
-                style={{ color: "#D6FF3F" }}
+                style={{ color: "#FFFFFF" }}
               >
                 View all {projects.length} completed →
               </Text>

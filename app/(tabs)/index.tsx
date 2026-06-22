@@ -57,7 +57,7 @@ export default function HomeScreen() {
             <View>
               <Text className="text-nw-white text-[20px] font-inter-bold">
                 Welcome back,{" "}
-                <Text style={{ color: "#D6FF3F" }}>
+                <Text style={{ color: "#1B1918" }}>
                   {CURRENT_USER.name.split(" ")[0]}
                 </Text>
               </Text>
@@ -71,7 +71,7 @@ export default function HomeScreen() {
               style={{
                 backgroundColor: "#1B1918",
                 borderWidth: 2,
-                borderColor: "#D6FF3F",
+                borderColor: "#1B1918",
               }}
               accessibilityRole="button"
             >
@@ -85,7 +85,7 @@ export default function HomeScreen() {
                 <View className="flex-1 items-center justify-center">
                   <Text
                     className="text-base font-inter-bold"
-                    style={{ color: "#D6FF3F" }}
+                    style={{ color: "#FFFFFF" }}
                   >
                     {CURRENT_USER.initials}
                   </Text>
@@ -102,7 +102,7 @@ export default function HomeScreen() {
               className="px-4 py-3 flex-row items-center"
               style={{ borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
             >
-              <Ionicons name="checkmark-circle" size={16} color="#4CD964" />
+              <Ionicons name="checkmark-circle" size={16} color="#9CA3AF" />
               <Text className="text-nw-white text-sm font-inter-semi ml-2">
                 Recently Completed
               </Text>

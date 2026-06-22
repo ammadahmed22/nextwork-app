@@ -14,15 +14,15 @@ module.exports = {
           surface: "#FFFFFF",
           card: "#FFFFFF",
           "card-alt": "#EEEAE6",
-          accent: "#D6FF3F",
+          accent: "#1B1918",
           // "orange" kept as alias so existing className refs auto-update to new accent
-          orange: "#D6FF3F",
+          orange: "#1B1918",
           // "white" now maps to primary dark text (inverted theme)
           white: "#1B1918",
           gray: "#6A6A6A",
           muted: "#6A6A6A",
           border: "#E6E6E6",
-          green: "#4CD964",
+          green: "#9CA3AF",
           nav: "#1B1918",
           error: "#FF3B30",
         },
