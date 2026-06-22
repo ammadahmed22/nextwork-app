@@ -5,6 +5,7 @@ import type { CatalogProject, SearchEntity, SearchMetadataItem } from "../types/
 export interface UseProjectCatalogResult {
   projects: CatalogProject[];
   categories: string[];
+  projectCounts: Record<string, number>;
   loading: boolean;
   error: string | null;
   refresh: () => void;
@@ -55,15 +56,18 @@ function parseResponse(data: Awaited<ReturnType<typeof api.searchProjects>>): Ca
   return Array.from(seen.values()).sort((a, b) => b.completions - a.completions);
 }
 
-function deriveCategories(projects: CatalogProject[]): string[] {
+function deriveCategories(projects: CatalogProject[]): {
+  categories: string[];
+  counts: Record<string, number>;
+} {
   const counts: Record<string, number> = {};
   for (const p of projects) {
     counts[p.category] = (counts[p.category] ?? 0) + 1;
   }
-  return Object.entries(counts)
+  const categories = Object.entries(counts)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 8)
     .map(([cat]) => cat);
+  return { categories, counts };
 }
 
 export function useProjectCatalog(): UseProjectCatalogResult {
@@ -97,11 +101,13 @@ export function useProjectCatalog(): UseProjectCatalogResult {
     };
   }, [tick]);
 
-  const categories = ["All", ...deriveCategories(projects)];
+  const { categories: derived, counts } = deriveCategories(projects);
+  const categories = ["All", ...derived];
 
   return {
     projects,
     categories,
+    projectCounts: counts,
     loading,
     error,
     refresh: () => setTick((t) => t + 1),
