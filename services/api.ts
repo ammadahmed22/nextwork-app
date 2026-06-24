@@ -6,7 +6,7 @@ import type {
   SelectedProject,
 } from "../types/api";
 
-const BASE = "https://learn.nextwork.org";
+const BASE = "https://nextwork.ai";
 
 // Cookie header works on native (iOS/Android). On web the browser blocks
 // setting Cookie directly — API calls fall back to seed data in that case.
