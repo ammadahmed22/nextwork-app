@@ -13,8 +13,7 @@ interface TabConfig {
 const TABS: TabConfig[] = [
   { name: "index", title: "Home", icon: "home-outline", iconFocused: "home" },
   { name: "explore", title: "Explore", icon: "compass-outline", iconFocused: "compass" },
-  { name: "community", title: "Community", icon: "people-outline", iconFocused: "people" },
-  { name: "profile", title: "Profile", icon: "person-outline", iconFocused: "person" },
+{ name: "profile", title: "Profile", icon: "person-outline", iconFocused: "person" },
 ];
 
 export default function TabLayout() {

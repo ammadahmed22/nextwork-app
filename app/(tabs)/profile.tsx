@@ -10,14 +10,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CURRENT_USER } from "../../constants/auth";
+import { useAuth } from "../../contexts/AuthContext";
 import { usePortfolio } from "../../hooks/usePortfolio";
-
-const BADGES = [
-  { label: "AWS Builder", color: "#F59E0B" },
-  { label: "Cloud Pro", color: "#06B6D4" },
-  { label: "Security+", color: "#8B5CF6" },
-];
 
 function categoryFromSlug(slug: string): { label: string; color: string } {
   if (slug.includes("compute")) return { label: "Compute", color: "#3B82F6" };
@@ -40,20 +34,110 @@ function relativeTime(isoDate: string): string {
   return `${months} month${months > 1 ? "s" : ""} ago`;
 }
 
+function GuestProfile() {
+  const router = useRouter();
+
+  return (
+    <SafeAreaView className="flex-1 bg-nw-bg">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 32, paddingVertical: 60 }}
+      >
+        {/* Avatar placeholder */}
+        <View
+          style={{
+            width: 96,
+            height: 96,
+            borderRadius: 48,
+            backgroundColor: "#E6E6E6",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: 24,
+          }}
+        >
+          <Ionicons name="person" size={44} color="#9CA3AF" />
+        </View>
+
+        <Text
+          style={{
+            fontSize: 22,
+            fontFamily: "Inter_700Bold",
+            color: "#1B1918",
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
+          Sign in to NextWork
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "Inter_400Regular",
+            color: "#6A6A6A",
+            textAlign: "center",
+            lineHeight: 22,
+            marginBottom: 32,
+          }}
+        >
+          Track your progress, view your completed projects, and build your cloud portfolio.
+        </Text>
+
+        <TouchableOpacity
+          onPress={() => router.push("/login")}
+          style={{
+            backgroundColor: "#1B1918",
+            paddingHorizontal: 40,
+            paddingVertical: 14,
+            borderRadius: 100,
+            width: "100%",
+            alignItems: "center",
+            marginBottom: 14,
+          }}
+          accessibilityRole="button"
+        >
+          <Text
+            style={{
+              color: "#FFFFFF",
+              fontSize: 15,
+              fontFamily: "Inter_600SemiBold",
+            }}
+          >
+            Sign In
+          </Text>
+        </TouchableOpacity>
+
+        <Text
+          style={{
+            fontSize: 12,
+            fontFamily: "Inter_400Regular",
+            color: "#9CA3AF",
+            textAlign: "center",
+            lineHeight: 18,
+          }}
+        >
+          NextWork is free to use.{"\n"}Sign in to unlock your personal dashboard.
+        </Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
 export default function ProfileScreen() {
   const router = useRouter();
+  const { isLoggedIn, user, logout } = useAuth();
   const { projects, loading } = usePortfolio();
-  const recentProjects = projects.slice(0, 6);
   const [avatarError, setAvatarError] = useState(false);
+
+  if (!isLoggedIn) return <GuestProfile />;
 
   return (
     <SafeAreaView className="flex-1 bg-nw-bg">
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Avatar + name */}
         <View className="items-center px-4 pt-8 pb-6">
-          {!avatarError ? (
+          {user?.avatarUrl && !avatarError ? (
             <Image
-              source={{ uri: CURRENT_USER.avatarUrl }}
+              source={{ uri: user.avatarUrl }}
               style={{
                 width: 96,
                 height: 96,
@@ -73,168 +157,110 @@ export default function ProfileScreen() {
                 className="text-4xl font-inter-bold"
                 style={{ color: "#FFFFFF" }}
               >
-                {CURRENT_USER.initials}
+                {user?.initials ?? "?"}
               </Text>
             </View>
           )}
           <Text className="text-nw-white text-[22px] font-inter-bold">
-            {CURRENT_USER.name}
+            {user?.name || "NextWork Learner"}
           </Text>
-          <Text className="text-nw-muted text-sm font-inter mt-1">
-            {CURRENT_USER.bio}
-          </Text>
-          <View
-            className="flex-row items-center mt-1.5 px-3 py-1 rounded-full"
-            style={{ backgroundColor: "#EEEAE6" }}
-          >
-            <Ionicons name="calendar-outline" size={11} color="#6A6A6A" />
-            <Text className="text-nw-muted text-xs font-inter ml-1">
-              {CURRENT_USER.joinedLabel}
+          {!!user?.bio && (
+            <Text className="text-nw-muted text-sm font-inter mt-1">
+              {user.bio}
             </Text>
-          </View>
-        </View>
-
-        {/* Stats row */}
-        <View
-          className="flex-row mx-4 mb-6 rounded-2xl overflow-hidden"
-          style={{ backgroundColor: "#1B1918" }}
-        >
-          {[
-            { value: loading ? "—" : String(projects.length), label: "Projects" },
-            { value: "14", label: "Day Streak" },
-            { value: String(BADGES.length), label: "Badges" },
-          ].map((stat, i, arr) => (
-            <View
-              key={stat.label}
-              className="flex-1 items-center py-5"
-              style={
-                i < arr.length - 1
-                  ? { borderRightWidth: 1, borderRightColor: "rgba(255,255,255,0.1)" }
-                  : undefined
-              }
-            >
-              <Text
-                className="text-2xl font-inter-bold"
-                style={{ color: "#FFFFFF" }}
-              >
-                {stat.value}
-              </Text>
-              <Text
-                className="text-xs font-inter mt-1"
-                style={{ color: "rgba(255,255,255,0.5)" }}
-              >
-                {stat.label}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Portfolio blurb */}
-        <View className="px-4 mb-6">
-          <Text
-            className="text-nw-muted text-sm font-inter leading-5"
-            numberOfLines={3}
-          >
-            {CURRENT_USER.portfolioDescription}
-          </Text>
-        </View>
-
-        {/* Badges */}
-        <View className="px-4 mb-6">
-          <Text className="text-nw-white text-[17px] font-inter-bold mb-3">
-            Badges
-          </Text>
-          <View className="flex-row flex-wrap">
-            {BADGES.map((badge) => (
-              <View
-                key={badge.label}
-                className="flex-row items-center rounded-full px-3 py-2 mr-2 mb-2"
-                style={{
-                  backgroundColor: badge.color + "18",
-                  borderWidth: 1,
-                  borderColor: badge.color + "35",
-                }}
-              >
-                <Ionicons name="ribbon" size={13} color={badge.color} />
-                <Text
-                  className="text-xs font-inter-semi ml-1.5"
-                  style={{ color: badge.color }}
-                >
-                  {badge.label}
-                </Text>
-              </View>
-            ))}
-          </View>
+          )}
         </View>
 
         {/* Completed projects */}
         <View className="px-4 mb-8">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-nw-white text-[17px] font-inter-bold">
-              Completed Projects
+              Completed Projects{!loading && projects.length > 0 ? ` (${projects.length})` : ""}
             </Text>
             {loading && <ActivityIndicator size="small" color="#1B1918" />}
           </View>
 
-          <View
-            className="rounded-2xl overflow-hidden"
-            style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6E6E6" }}
-          >
-            {recentProjects.map((doc, i) => {
-              const cat = categoryFromSlug(doc.project.id);
-              const isLast = i === recentProjects.length - 1;
-              return (
-                <TouchableOpacity
-                  key={doc.id}
-                  onPress={() => router.push(`/project/${doc.project.id}`)}
-                  className="flex-row items-center px-4 py-3.5"
-                  style={isLast ? undefined : { borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Open ${doc.title}`}
-                >
-                  <View
-                    className="w-1 self-stretch rounded-full mr-3"
-                    style={{ backgroundColor: cat.color }}
-                  />
-                  <View className="flex-1 mr-3">
-                    <Text
-                      className="text-nw-white text-sm font-inter-semi"
-                      numberOfLines={1}
-                    >
-                      {doc.title}
-                    </Text>
-                    <View className="flex-row items-center mt-0.5">
-                      <Text
-                        className="text-xs font-inter-semi"
-                        style={{ color: cat.color }}
-                      >
-                        {cat.label}
-                      </Text>
-                      <Text className="text-nw-muted text-xs font-inter ml-2">
-                        · {relativeTime(doc.createdAt)}
-                      </Text>
-                    </View>
-                  </View>
-                  <Ionicons name="checkmark-circle" size={20} color="#9CA3AF" />
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-
-          {projects.length > 6 && (
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/explore")}
-              className="items-center py-3 rounded-xl mt-3"
-              style={{ backgroundColor: "#1B1918" }}
+          {projects.length > 0 ? (
+            <View
+              className="rounded-2xl overflow-hidden"
+              style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6E6E6" }}
             >
-              <Text
-                className="text-sm font-inter-semi"
-                style={{ color: "#FFFFFF" }}
-              >
-                View all {projects.length} completed →
+              {projects.map((doc, i) => {
+                const cat = categoryFromSlug(doc.project.id);
+                const isLast = i === projects.length - 1;
+                return (
+                  <TouchableOpacity
+                    key={doc.id}
+                    onPress={() => router.push(`/project/${doc.project.id}`)}
+                    className="flex-row items-center px-4 py-3.5"
+                    style={isLast ? undefined : { borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Open ${doc.title}`}
+                  >
+                    <View
+                      className="w-1 self-stretch rounded-full mr-3"
+                      style={{ backgroundColor: cat.color }}
+                    />
+                    <View className="flex-1 mr-3">
+                      <Text
+                        className="text-nw-white text-sm font-inter-semi"
+                        numberOfLines={1}
+                      >
+                        {doc.title}
+                      </Text>
+                      <View className="flex-row items-center mt-0.5">
+                        <Text
+                          className="text-xs font-inter-semi"
+                          style={{ color: cat.color }}
+                        >
+                          {cat.label}
+                        </Text>
+                        <Text className="text-nw-muted text-xs font-inter ml-2">
+                          · {relativeTime(doc.createdAt)}
+                        </Text>
+                      </View>
+                    </View>
+                    <Ionicons name="checkmark-circle" size={20} color="#9CA3AF" />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          ) : !loading ? (
+            <View
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderWidth: 1,
+                borderColor: "#E6E6E6",
+                borderRadius: 16,
+                padding: 24,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "#6A6A6A", fontSize: 13, fontFamily: "Inter_400Regular", textAlign: "center" }}>
+                No completed projects yet.{"\n"}Head to Explore to get started!
               </Text>
-            </TouchableOpacity>
-          )}
+            </View>
+          ) : null}
+
+        </View>
+
+        {/* Sign out */}
+        <View className="px-4 mb-10">
+          <TouchableOpacity
+            onPress={logout}
+            style={{
+              borderWidth: 1,
+              borderColor: "#E6E6E6",
+              borderRadius: 12,
+              paddingVertical: 14,
+              alignItems: "center",
+            }}
+            accessibilityRole="button"
+          >
+            <Text style={{ color: "#9CA3AF", fontSize: 14, fontFamily: "Inter_600SemiBold" }}>
+              Sign Out
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
