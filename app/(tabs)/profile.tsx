@@ -176,17 +176,6 @@ export default function ProfileScreen() {
               {user.bio}
             </Text>
           )}
-          {!!user?.joinedLabel && (
-            <View
-              className="flex-row items-center mt-1.5 px-3 py-1 rounded-full"
-              style={{ backgroundColor: "#EEEAE6" }}
-            >
-              <Ionicons name="calendar-outline" size={11} color="#6A6A6A" />
-              <Text className="text-nw-muted text-xs font-inter ml-1">
-                {user.joinedLabel}
-              </Text>
-            </View>
-          )}
         </View>
 
         {/* Stats row */}

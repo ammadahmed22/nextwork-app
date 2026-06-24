@@ -83,10 +83,14 @@ async function buildUserFromSources(
     // endpoint may not exist — continue with other sources
   }
 
-  // Portfolio endpoint is confirmed working — use description as bio fallback
+  // Portfolio endpoint is confirmed working and returns ownerName + ownerPicture
   try {
     const portfolio = await api.getPortfolio();
     bio = bio || portfolio.description || "";
+    name = name || portfolio.ownerName || "";
+    if (!avatarUrl && portfolio.ownerPicture) {
+      avatarUrl = `https://nextwork.ai${portfolio.ownerPicture}`;
+    }
   } catch {
     // no session or no portfolio — skip
   }

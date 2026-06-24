@@ -61,6 +61,9 @@ export interface PortfolioDocument {
 export interface Portfolio {
   description: string;
   documents: PortfolioDocument[];
+  ownerName?: string;
+  ownerPicture?: string;
+  title?: string;
 }
 
 export interface SelectedProject {
