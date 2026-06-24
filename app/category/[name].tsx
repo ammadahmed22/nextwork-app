@@ -1,6 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -11,33 +10,41 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CatalogProjectCard from "../../components/CatalogProjectCard";
-import { getCategoryImage } from "../../constants/categoryImages";
-import { useProjectCatalog } from "../../hooks/useProjectCatalog";
+import { useCategoryProjects } from "../../hooks/useCategoryProjects";
 
 export default function CategoryScreen() {
-  const { name, imageUrl } = useLocalSearchParams<{ name: string; imageUrl?: string }>();
+  const { name, imageUrl: paramImageUrl } = useLocalSearchParams<{
+    name: string;
+    imageUrl?: string;
+  }>();
   const router = useRouter();
   const categoryName = decodeURIComponent(name ?? "");
-  const { projects, loading, error, refresh } = useProjectCatalog();
 
-  const filtered = useMemo(
-    () => projects.filter((p) => p.category === categoryName),
-    [projects, categoryName]
-  );
+  const { projects, imageUrl: fetchedImageUrl, loading, error, refresh } =
+    useCategoryProjects(categoryName);
 
-  const imageUri = imageUrl ?? getCategoryImage(categoryName);
+  // Prefer the image URL fetched from the API; fall back to the one passed as a route param
+  const heroImage = fetchedImageUrl || paramImageUrl || "";
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F7F5F3" }} edges={["top"]}>
-      {/* Hero header with artwork */}
+      {/* Hero header */}
       <ImageBackground
-        source={{ uri: imageUri }}
+        source={heroImage ? { uri: heroImage } : undefined}
         style={{ height: 160, justifyContent: "flex-end" }}
         resizeMode="cover"
       >
-        <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.5)" }} />
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: heroImage ? "rgba(0,0,0,0.5)" : "#1B1918",
+          }}
+        />
 
-        {/* Back button */}
         <TouchableOpacity
           onPress={() => router.back()}
           style={{
@@ -77,13 +84,15 @@ export default function CategoryScreen() {
               marginTop: 2,
             }}
           >
-            {loading ? "Loading…" : `${filtered.length} project${filtered.length !== 1 ? "s" : ""}`}
+            {loading
+              ? "Loading…"
+              : `${projects.length} project${projects.length !== 1 ? "s" : ""}`}
           </Text>
         </View>
       </ImageBackground>
 
       {/* Error state */}
-      {error && !loading && projects.length === 0 && (
+      {error && !loading && (
         <View
           style={{
             margin: 16,
@@ -94,10 +103,25 @@ export default function CategoryScreen() {
             borderColor: "#FFDAB8",
           }}
         >
-          <Text style={{ color: "#92400E", fontSize: 13, fontFamily: "Inter_600SemiBold", marginBottom: 4 }}>
+          <Text
+            style={{
+              color: "#92400E",
+              fontSize: 13,
+              fontFamily: "Inter_600SemiBold",
+              marginBottom: 4,
+            }}
+          >
             Failed to load
           </Text>
-          <Text style={{ color: "#92400E", fontSize: 12, fontFamily: "Inter_400Regular", marginBottom: 8 }} numberOfLines={2}>
+          <Text
+            style={{
+              color: "#92400E",
+              fontSize: 12,
+              fontFamily: "Inter_400Regular",
+              marginBottom: 8,
+            }}
+            numberOfLines={2}
+          >
             {error}
           </Text>
           <TouchableOpacity onPress={refresh}>
@@ -110,7 +134,7 @@ export default function CategoryScreen() {
 
       {/* Project list */}
       <FlatList
-        data={filtered}
+        data={projects}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <CatalogProjectCard project={item} />}
         showsVerticalScrollIndicator={false}
@@ -119,17 +143,45 @@ export default function CategoryScreen() {
           loading ? (
             <View style={{ alignItems: "center", paddingVertical: 80 }}>
               <ActivityIndicator size="large" color="#1B1918" />
-              <Text style={{ color: "#6A6A6A", fontSize: 14, fontFamily: "Inter_400Regular", marginTop: 16 }}>
+              <Text
+                style={{
+                  color: "#6A6A6A",
+                  fontSize: 14,
+                  fontFamily: "Inter_400Regular",
+                  marginTop: 16,
+                }}
+              >
                 Loading projects…
               </Text>
             </View>
           ) : (
-            <View style={{ alignItems: "center", paddingVertical: 60, paddingHorizontal: 32 }}>
+            <View
+              style={{
+                alignItems: "center",
+                paddingVertical: 60,
+                paddingHorizontal: 32,
+              }}
+            >
               <Text style={{ fontSize: 40, marginBottom: 12 }}>🔍</Text>
-              <Text style={{ color: "#1B1918", fontSize: 16, fontFamily: "Inter_700Bold", textAlign: "center", marginBottom: 6 }}>
+              <Text
+                style={{
+                  color: "#1B1918",
+                  fontSize: 16,
+                  fontFamily: "Inter_700Bold",
+                  textAlign: "center",
+                  marginBottom: 6,
+                }}
+              >
                 No projects found
               </Text>
-              <Text style={{ color: "#6A6A6A", fontSize: 14, fontFamily: "Inter_400Regular", textAlign: "center" }}>
+              <Text
+                style={{
+                  color: "#6A6A6A",
+                  fontSize: 14,
+                  fontFamily: "Inter_400Regular",
+                  textAlign: "center",
+                }}
+              >
                 No projects in {categoryName} right now.
               </Text>
             </View>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import type { CategoryGroup, SearchResponse } from "../types/api";
 
-const BASE = "https://learn.nextwork.org";
+const BASE = "https://nextwork.ai";
 
 function parseGroups(data: SearchResponse): CategoryGroup[] {
   return data.results
