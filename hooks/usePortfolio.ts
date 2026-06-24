@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { PORTFOLIO_SEED } from "../data/portfolio-seed";
 import { api } from "../services/api";
 import type { PortfolioDocument } from "../types/api";
 
@@ -7,14 +6,12 @@ interface UsePortfolioResult {
   projects: PortfolioDocument[];
   loading: boolean;
   error: string | null;
-  fromCache: boolean;
 }
 
 export function usePortfolio(): UsePortfolioResult {
-  const [projects, setProjects] = useState<PortfolioDocument[]>(PORTFOLIO_SEED);
+  const [projects, setProjects] = useState<PortfolioDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [fromCache, setFromCache] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -23,8 +20,7 @@ export function usePortfolio(): UsePortfolioResult {
       .then((portfolio) => {
         if (!cancelled) {
           const docs = portfolio.documents.filter((d) => d.type === "PROJECT");
-          setProjects(docs.length > 0 ? docs : PORTFOLIO_SEED);
-          setFromCache(docs.length === 0);
+          setProjects(docs);
         }
       })
       .catch((err) => {
@@ -38,5 +34,5 @@ export function usePortfolio(): UsePortfolioResult {
     return () => { cancelled = true; };
   }, []);
 
-  return { projects, loading, error, fromCache };
+  return { projects, loading, error };
 }

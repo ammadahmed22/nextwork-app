@@ -61,6 +61,9 @@ export interface PortfolioDocument {
 export interface Portfolio {
   description: string;
   documents: PortfolioDocument[];
+  ownerName?: string;
+  ownerPicture?: string;
+  title?: string;
 }
 
 export interface SelectedProject {
@@ -79,4 +82,17 @@ export interface MyProject {
 export interface MyProjectsResponse {
   items: MyProject[];
   pagination: { hasMore: boolean };
+}
+
+// ── Auth / Profile ───────────────────────────────────────────────────────────
+
+export interface MeResponse {
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  username?: string;
+  avatarUrl?: string;
+  avatar?: string;
+  bio?: string;
 }
