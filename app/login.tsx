@@ -11,18 +11,42 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import WebView, { type WebViewMessageEvent } from "react-native-webview";
 import { type AuthUser, useAuth } from "../contexts/AuthContext";
 import { api, setSessionToken } from "../services/api";
-import type { MeResponse } from "../types/api";
 
 const LOGIN_URL = "https://nextwork.ai";
 
-// Injected after each page load — posts document.cookie to React Native
+// Injected after every page load.
+// Posts JSON with cookies + any profile data visible in the DOM.
+// Falls back to posting plain cookie string if JSON fails.
 const COOKIE_INJECTOR = `
-  (function() {
-    try {
-      window.ReactNativeWebView.postMessage(document.cookie);
-    } catch(e) {}
-  })();
-  true;
+(function() {
+  try {
+    var cookies = document.cookie;
+
+    // Look for profile picture — matches /uploads/ or profile_picture pattern
+    var imgs = Array.from(document.querySelectorAll('img'));
+    var profileImg = imgs.find(function(img) {
+      return img.src && (
+        img.src.indexOf('profile_picture') !== -1 ||
+        img.src.indexOf('/uploads/') !== -1
+      );
+    });
+
+    // Look for user display name in common nav/header patterns
+    var nameEl = document.querySelector(
+      '[class*="userName"], [class*="user-name"], [class*="displayName"], [data-user-name], [class*="NavUser"], [class*="nav-user"]'
+    );
+
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      type: 'auth_data',
+      cookies: cookies,
+      avatarUrl: profileImg ? profileImg.src : '',
+      name: nameEl ? (nameEl.textContent || '').trim() : '',
+    }));
+  } catch(e) {
+    try { window.ReactNativeWebView.postMessage(document.cookie); } catch(_) {}
+  }
+})();
+true;
 `;
 
 function cookieValue(cookieStr: string, name: string): string {
@@ -30,11 +54,43 @@ function cookieValue(cookieStr: string, name: string): string {
   return match ? decodeURIComponent(match[1]) : "";
 }
 
-function buildUser(me: MeResponse | null): AuthUser {
-  const name =
-    me?.name ??
-    [me?.firstName, me?.lastName].filter(Boolean).join(" ") ??
-    "";
+async function buildUserFromSources(
+  domData: { name: string; avatarUrl: string }
+): Promise<AuthUser> {
+  let name = domData.name;
+  let avatarUrl = domData.avatarUrl;
+  let bio = "";
+  let joinedLabel = "";
+
+  // Try /api/v1/me — may or may not exist on nextwork.ai
+  try {
+    const me = await api.getMe();
+    if (me) {
+      name =
+        name ||
+        me.name ||
+        [me.firstName, me.lastName].filter(Boolean).join(" ") ||
+        "";
+      avatarUrl = avatarUrl || me.avatarUrl || me.avatar || "";
+      bio = me.bio || "";
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const createdAt = (me as any).createdAt as string | undefined;
+      if (createdAt) {
+        joinedLabel = `Joined ${new Date(createdAt).getFullYear()}`;
+      }
+    }
+  } catch {
+    // endpoint may not exist — continue with other sources
+  }
+
+  // Portfolio endpoint is confirmed working — use description as bio fallback
+  try {
+    const portfolio = await api.getPortfolio();
+    bio = bio || portfolio.description || "";
+  } catch {
+    // no session or no portfolio — skip
+  }
+
   const initials =
     name
       .split(" ")
@@ -43,14 +99,8 @@ function buildUser(me: MeResponse | null): AuthUser {
       .slice(0, 2)
       .join("")
       .toUpperCase() || "?";
-  return {
-    name,
-    initials,
-    avatarUrl: me?.avatarUrl ?? me?.avatar ?? "",
-    bio: me?.bio ?? "",
-    email: me?.email ?? "",
-    joinedLabel: "",
-  };
+
+  return { name, initials, avatarUrl, bio, email: "", joinedLabel };
 }
 
 export default function LoginScreen() {
@@ -60,12 +110,32 @@ export default function LoginScreen() {
   const [processing, setProcessing] = useState(false);
   const processedRef = useRef(false);
 
-  async function handleCookieMessage(event: WebViewMessageEvent) {
+  async function handleMessage(event: WebViewMessageEvent) {
     if (processedRef.current) return;
 
-    const cookies = event.nativeEvent.data;
-    const token = cookieValue(cookies, "auth-session");
+    const raw = event.nativeEvent.data;
+    let cookieStr = raw;
+    let domName = "";
+    let domAvatarUrl = "";
 
+    // Try to parse enhanced JSON payload
+    try {
+      const parsed = JSON.parse(raw) as {
+        type?: string;
+        cookies?: string;
+        avatarUrl?: string;
+        name?: string;
+      };
+      if (parsed.type === "auth_data") {
+        cookieStr = parsed.cookies ?? "";
+        domName = parsed.name ?? "";
+        domAvatarUrl = parsed.avatarUrl ?? "";
+      }
+    } catch {
+      // plain cookie string fallback — cookieStr already set
+    }
+
+    const token = cookieValue(cookieStr, "auth-session");
     if (!token) return;
 
     processedRef.current = true;
@@ -73,15 +143,8 @@ export default function LoginScreen() {
 
     try {
       setSessionToken(token);
-
-      let me: MeResponse | null = null;
-      try {
-        me = await api.getMe();
-      } catch {
-        // /api/v1/me may not exist — proceed with fallback user
-      }
-
-      await login(token, buildUser(me));
+      const user = await buildUserFromSources({ name: domName, avatarUrl: domAvatarUrl });
+      await login(token, user);
       router.back();
     } catch {
       processedRef.current = false;
@@ -122,11 +185,10 @@ export default function LoginScreen() {
         >
           Sign in to NextWork
         </Text>
-        {/* Balance the close icon */}
         <View style={{ width: 24 }} />
       </View>
 
-      {/* Loading overlay while processing the session */}
+      {/* Processing overlay */}
       {processing && (
         <View
           style={{
@@ -175,11 +237,9 @@ export default function LoginScreen() {
         source={{ uri: LOGIN_URL }}
         style={{ flex: 1 }}
         onLoadStart={() => setWebLoading(true)}
-        onLoadEnd={() => {
-          setWebLoading(false);
-        }}
+        onLoadEnd={() => setWebLoading(false)}
         injectedJavaScript={COOKIE_INJECTOR}
-        onMessage={handleCookieMessage}
+        onMessage={handleMessage}
         javaScriptEnabled
         domStorageEnabled
         thirdPartyCookiesEnabled
