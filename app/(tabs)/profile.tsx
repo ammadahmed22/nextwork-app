@@ -13,12 +13,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePortfolio } from "../../hooks/usePortfolio";
 
-const BADGES = [
-  { label: "AWS Builder", color: "#F59E0B" },
-  { label: "Cloud Pro", color: "#06B6D4" },
-  { label: "Security+", color: "#8B5CF6" },
-];
-
 function categoryFromSlug(slug: string): { label: string; color: string } {
   if (slug.includes("compute")) return { label: "Compute", color: "#3B82F6" };
   if (slug.includes("networks")) return { label: "Networking", color: "#06B6D4" };
@@ -132,7 +126,6 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { isLoggedIn, user, logout } = useAuth();
   const { projects, loading } = usePortfolio();
-  const recentProjects = projects.slice(0, 6);
   const [avatarError, setAvatarError] = useState(false);
 
   if (!isLoggedIn) return <GuestProfile />;
@@ -178,86 +171,23 @@ export default function ProfileScreen() {
           )}
         </View>
 
-        {/* Stats row */}
-        <View
-          className="flex-row mx-4 mb-6 rounded-2xl overflow-hidden"
-          style={{ backgroundColor: "#1B1918" }}
-        >
-          {[
-            { value: loading ? "—" : String(projects.length), label: "Projects" },
-            { value: "—", label: "Day Streak" },
-            { value: String(BADGES.length), label: "Badges" },
-          ].map((stat, i, arr) => (
-            <View
-              key={stat.label}
-              className="flex-1 items-center py-5"
-              style={
-                i < arr.length - 1
-                  ? { borderRightWidth: 1, borderRightColor: "rgba(255,255,255,0.1)" }
-                  : undefined
-              }
-            >
-              <Text
-                className="text-2xl font-inter-bold"
-                style={{ color: "#FFFFFF" }}
-              >
-                {stat.value}
-              </Text>
-              <Text
-                className="text-xs font-inter mt-1"
-                style={{ color: "rgba(255,255,255,0.5)" }}
-              >
-                {stat.label}
-              </Text>
-            </View>
-          ))}
-        </View>
-
-        {/* Badges */}
-        <View className="px-4 mb-6">
-          <Text className="text-nw-white text-[17px] font-inter-bold mb-3">
-            Badges
-          </Text>
-          <View className="flex-row flex-wrap">
-            {BADGES.map((badge) => (
-              <View
-                key={badge.label}
-                className="flex-row items-center rounded-full px-3 py-2 mr-2 mb-2"
-                style={{
-                  backgroundColor: badge.color + "18",
-                  borderWidth: 1,
-                  borderColor: badge.color + "35",
-                }}
-              >
-                <Ionicons name="ribbon" size={13} color={badge.color} />
-                <Text
-                  className="text-xs font-inter-semi ml-1.5"
-                  style={{ color: badge.color }}
-                >
-                  {badge.label}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
         {/* Completed projects */}
         <View className="px-4 mb-8">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-nw-white text-[17px] font-inter-bold">
-              Completed Projects
+              Completed Projects{!loading && projects.length > 0 ? ` (${projects.length})` : ""}
             </Text>
             {loading && <ActivityIndicator size="small" color="#1B1918" />}
           </View>
 
-          {recentProjects.length > 0 ? (
+          {projects.length > 0 ? (
             <View
               className="rounded-2xl overflow-hidden"
               style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6E6E6" }}
             >
-              {recentProjects.map((doc, i) => {
+              {projects.map((doc, i) => {
                 const cat = categoryFromSlug(doc.project.id);
-                const isLast = i === recentProjects.length - 1;
+                const isLast = i === projects.length - 1;
                 return (
                   <TouchableOpacity
                     key={doc.id}
@@ -312,20 +242,6 @@ export default function ProfileScreen() {
             </View>
           ) : null}
 
-          {projects.length > 6 && (
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/explore")}
-              className="items-center py-3 rounded-xl mt-3"
-              style={{ backgroundColor: "#1B1918" }}
-            >
-              <Text
-                className="text-sm font-inter-semi"
-                style={{ color: "#FFFFFF" }}
-              >
-                View all {projects.length} completed →
-              </Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Sign out */}
