@@ -80,3 +80,16 @@ export interface MyProjectsResponse {
   items: MyProject[];
   pagination: { hasMore: boolean };
 }
+
+// ── Auth / Profile ───────────────────────────────────────────────────────────
+
+export interface MeResponse {
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  username?: string;
+  avatarUrl?: string;
+  avatar?: string;
+  bio?: string;
+}

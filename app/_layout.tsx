@@ -8,6 +8,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "../global.css";
+import { AuthProvider } from "../contexts/AuthContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,16 +28,22 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen
-        name="project/[id]"
-        options={{ animation: "slide_from_right" }}
-      />
-      <Stack.Screen
-        name="category/[name]"
-        options={{ animation: "slide_from_right" }}
-      />
-    </Stack>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="login"
+          options={{ animation: "slide_from_bottom", presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="project/[id]"
+          options={{ animation: "slide_from_right" }}
+        />
+        <Stack.Screen
+          name="category/[name]"
+          options={{ animation: "slide_from_right" }}
+        />
+      </Stack>
+    </AuthProvider>
   );
 }

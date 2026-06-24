@@ -3,13 +3,13 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CURRENT_USER } from "../../constants/auth";
 import CTABanner from "../../components/CTABanner";
 import HeroSection from "../../components/HeroSection";
 import ProjectCard from "../../components/ProjectCard";
 import StatsBar from "../../components/StatsBar";
 import TestimonialCarousel from "../../components/TestimonialCarousel";
 import ValuePropRow from "../../components/ValuePropRow";
+import { useAuth } from "../../contexts/AuthContext";
 import { projects } from "../../data/projects";
 import { usePortfolio } from "../../hooks/usePortfolio";
 
@@ -38,6 +38,7 @@ function relativeTime(isoDate: string): string {
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { isLoggedIn, user } = useAuth();
   const { projects: portfolio } = usePortfolio();
   const [avatarError, setAvatarError] = useState(false);
   const recentCompletions = portfolio.slice(0, 3);
@@ -51,104 +52,108 @@ export default function HomeScreen() {
 
         <StatsBar />
 
-        {/* Personalized progress card */}
-        <View className="px-4 mb-8">
-          <View className="flex-row items-center justify-between mb-3">
-            <View>
-              <Text className="text-nw-white text-[20px] font-inter-bold">
-                Welcome back,{" "}
-                <Text style={{ color: "#1B1918" }}>
-                  {CURRENT_USER.name.split(" ")[0]}
+        {/* Personalized section — only shown when logged in */}
+        {isLoggedIn && (
+          <View className="px-4 mb-8">
+            <View className="flex-row items-center justify-between mb-3">
+              <View>
+                <Text className="text-nw-white text-[20px] font-inter-bold">
+                  Welcome back,{" "}
+                  <Text style={{ color: "#1B1918" }}>
+                    {user?.name?.split(" ")[0] ?? "there"}
+                  </Text>
                 </Text>
-              </Text>
-              <Text className="text-nw-muted text-sm font-inter mt-0.5">
-                {portfolio.length} projects completed · Keep going!
-              </Text>
+                <Text className="text-nw-muted text-sm font-inter mt-0.5">
+                  {portfolio.length} projects completed · Keep going!
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => router.push("/(tabs)/profile")}
+                className="w-10 h-10 rounded-full overflow-hidden"
+                style={{
+                  backgroundColor: "#1B1918",
+                  borderWidth: 2,
+                  borderColor: "#1B1918",
+                }}
+                accessibilityRole="button"
+              >
+                {user?.avatarUrl && !avatarError ? (
+                  <Image
+                    source={{ uri: user.avatarUrl }}
+                    style={{ width: 36, height: 36 }}
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <View className="flex-1 items-center justify-center">
+                    <Text
+                      className="text-base font-inter-bold"
+                      style={{ color: "#FFFFFF" }}
+                    >
+                      {user?.initials ?? "?"}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/profile")}
-              className="w-10 h-10 rounded-full overflow-hidden"
-              style={{
-                backgroundColor: "#1B1918",
-                borderWidth: 2,
-                borderColor: "#1B1918",
-              }}
-              accessibilityRole="button"
-            >
-              {!avatarError ? (
-                <Image
-                  source={{ uri: CURRENT_USER.avatarUrl }}
-                  style={{ width: 36, height: 36 }}
-                  onError={() => setAvatarError(true)}
-                />
-              ) : (
-                <View className="flex-1 items-center justify-center">
-                  <Text
-                    className="text-base font-inter-bold"
-                    style={{ color: "#FFFFFF" }}
-                  >
-                    {CURRENT_USER.initials}
+
+            {recentCompletions.length > 0 && (
+              <View
+                className="rounded-2xl overflow-hidden"
+                style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6E6E6" }}
+              >
+                <View
+                  className="px-4 py-3 flex-row items-center"
+                  style={{ borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
+                >
+                  <Ionicons name="checkmark-circle" size={16} color="#9CA3AF" />
+                  <Text className="text-nw-white text-sm font-inter-semi ml-2">
+                    Recently Completed
                   </Text>
                 </View>
-              )}
-            </TouchableOpacity>
-          </View>
-
-          <View
-            className="rounded-2xl overflow-hidden"
-            style={{ backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "#E6E6E6" }}
-          >
-            <View
-              className="px-4 py-3 flex-row items-center"
-              style={{ borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
-            >
-              <Ionicons name="checkmark-circle" size={16} color="#9CA3AF" />
-              <Text className="text-nw-white text-sm font-inter-semi ml-2">
-                Recently Completed
-              </Text>
-            </View>
-            {recentCompletions.map((doc, i) => {
-              const cat = categoryFromSlug(doc.project.id);
-              const isLast = i === recentCompletions.length - 1;
-              return (
+                {recentCompletions.map((doc, i) => {
+                  const cat = categoryFromSlug(doc.project.id);
+                  const isLast = i === recentCompletions.length - 1;
+                  return (
+                    <TouchableOpacity
+                      key={doc.id}
+                      onPress={() => router.push(`/project/${doc.project.id}`)}
+                      className="flex-row items-center px-4 py-3"
+                      style={isLast ? undefined : { borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
+                      accessibilityRole="button"
+                    >
+                      <View
+                        className="w-2 h-2 rounded-full mr-3"
+                        style={{ backgroundColor: cat.color }}
+                      />
+                      <Text
+                        className="text-nw-white text-sm font-inter flex-1"
+                        numberOfLines={1}
+                      >
+                        {doc.title}
+                      </Text>
+                      <Text className="text-nw-muted text-xs font-inter ml-2">
+                        {relativeTime(doc.createdAt)}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
                 <TouchableOpacity
-                  key={doc.id}
-                  onPress={() => router.push(`/project/${doc.project.id}`)}
-                  className="flex-row items-center px-4 py-3"
-                  style={isLast ? undefined : { borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
-                  accessibilityRole="button"
+                  onPress={() => router.push("/(tabs)/profile")}
+                  className="px-4 py-3 flex-row items-center justify-center"
+                  style={{ borderTopWidth: 1, borderTopColor: "#E6E6E6" }}
                 >
-                  <View
-                    className="w-2 h-2 rounded-full mr-3"
-                    style={{ backgroundColor: cat.color }}
-                  />
                   <Text
-                    className="text-nw-white text-sm font-inter flex-1"
-                    numberOfLines={1}
+                    className="text-xs font-inter-semi"
+                    style={{ color: "#1B1918" }}
                   >
-                    {doc.title}
+                    View all {portfolio.length} completed
                   </Text>
-                  <Text className="text-nw-muted text-xs font-inter ml-2">
-                    {relativeTime(doc.createdAt)}
-                  </Text>
+                  <Ionicons name="chevron-forward" size={12} color="#1B1918" style={{ marginLeft: 4 }} />
                 </TouchableOpacity>
-              );
-            })}
-            <TouchableOpacity
-              onPress={() => router.push("/(tabs)/profile")}
-              className="px-4 py-3 flex-row items-center justify-center"
-              style={{ borderTopWidth: 1, borderTopColor: "#E6E6E6" }}
-            >
-              <Text
-                className="text-xs font-inter-semi"
-                style={{ color: "#1B1918" }}
-              >
-                View all {portfolio.length} completed
-              </Text>
-              <Ionicons name="chevron-forward" size={12} color="#1B1918" style={{ marginLeft: 4 }} />
-            </TouchableOpacity>
+              </View>
+            )}
           </View>
-        </View>
+        )}
 
         {/* Why NextWork */}
         <View className="mb-6">

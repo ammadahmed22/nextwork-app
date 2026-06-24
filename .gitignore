@@ -33,8 +33,6 @@ yarn-error.*
 # local env files
 .env*.local
 
-# auth secrets — session token lives here, never commit
-constants/auth.ts
 
 # typescript
 *.tsbuildinfo
