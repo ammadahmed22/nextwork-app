@@ -7,10 +7,30 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { setSessionToken } from "../services/api";
+import { api, setSessionToken } from "../services/api";
 
 const TOKEN_KEY = "auth-session-token";
 const USER_KEY = "auth-user-profile";
+const BASE = "https://nextwork.ai";
+
+async function refreshProfile(currentUser: AuthUser | null): Promise<AuthUser | null> {
+  try {
+    const portfolio = await api.getPortfolio();
+    const base = currentUser ?? { name: "", initials: "?", avatarUrl: "", bio: "", email: "", joinedLabel: "" };
+    const name = portfolio.ownerName || base.name;
+    const initials =
+      name.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase() || "?";
+    return {
+      ...base,
+      name,
+      initials,
+      avatarUrl: portfolio.ownerPicture ? `${BASE}${portfolio.ownerPicture}` : base.avatarUrl,
+      bio: portfolio.description || base.bio,
+    };
+  } catch {
+    return currentUser;
+  }
+}
 
 export interface AuthUser {
   name: string;
@@ -49,15 +69,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (storedToken) {
           setSessionToken(storedToken);
           setToken(storedToken);
-          if (storedUser) {
-            setUser(JSON.parse(storedUser) as AuthUser);
-          }
+          const cached = storedUser ? (JSON.parse(storedUser) as AuthUser) : null;
+          if (cached) setUser(cached);
+          setLoading(false);
+
+          // Background refresh — picks up any missing avatar/name without blocking launch
+          refreshProfile(cached).then(async (fresh) => {
+            if (fresh) {
+              setUser(fresh);
+              await SecureStore.setItemAsync(USER_KEY, JSON.stringify(fresh)).catch(() => {});
+            }
+          });
+          return;
         }
       } catch {
         // SecureStore unavailable (e.g. simulator) — start as guest
-      } finally {
-        setLoading(false);
       }
+      setLoading(false);
     }
     restore();
   }, []);
