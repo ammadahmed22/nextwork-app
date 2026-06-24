@@ -53,8 +53,6 @@ export default function TabLayout() {
           }}
         />
       ))}
-      {/* community.tsx exists on disk but community moved to Discord — hide from tab bar */}
-      <Tabs.Screen name="community" options={{ href: null }} />
     </Tabs>
   );
 }
