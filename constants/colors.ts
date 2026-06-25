@@ -13,6 +13,16 @@ export const colors = {
   nav: "#1B1918",
 } as const;
 
+/** Maps broad static project categories → accent color (used by ProjectCard) */
+export const categoryColors: Record<string, string> = {
+  AI: "#8B5CF6",
+  DevOps: "#3B82F6",
+  Frontend: "#10B981",
+  Backend: "#F59E0B",
+  Data: "#EC4899",
+  Cloud: "#06B6D4",
+};
+
 /** Maps catalog project category names → accent color */
 export const CATEGORY_COLORS: Record<string, string> = {
   "Amazon VPC": "#06B6D4",
