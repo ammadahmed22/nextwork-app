@@ -97,7 +97,7 @@ export default function HomeScreen() {
                   className="px-4 py-3 flex-row items-center"
                   style={{ borderBottomWidth: 1, borderBottomColor: "#E6E6E6" }}
                 >
-                  <Ionicons name="checkmark-circle" size={16} color="#9CA3AF" />
+                  <Ionicons name="checkmark-circle" size={16} color="#10B981" />
                   <Text className="text-nw-white text-sm font-inter-semi ml-2">
                     Recently Completed
                   </Text>

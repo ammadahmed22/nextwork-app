@@ -54,15 +54,15 @@ export default function CatalogProjectCard({ project }: Props) {
             <View
               className="flex-row items-center rounded-full px-2.5 py-1"
               style={{
-                backgroundColor: "#9CA3AF20",
+                backgroundColor: "#10B98120",
                 borderWidth: 1,
-                borderColor: "#9CA3AF40",
+                borderColor: "#10B98140",
               }}
             >
-              <Ionicons name="checkmark-circle" size={11} color="#9CA3AF" />
+              <Ionicons name="checkmark-circle" size={11} color="#10B981" />
               <Text
                 className="text-xs font-inter-semi ml-1"
-                style={{ color: "#9CA3AF" }}
+                style={{ color: "#10B981" }}
               >
                 Completed
               </Text>

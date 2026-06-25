@@ -212,7 +212,7 @@ export default function ProfileScreen() {
                         </Text>
                       </View>
                     </View>
-                    <Ionicons name="checkmark-circle" size={20} color="#9CA3AF" />
+                    <Ionicons name="checkmark-circle" size={20} color="#10B981" />
                   </TouchableOpacity>
                 );
               })}
