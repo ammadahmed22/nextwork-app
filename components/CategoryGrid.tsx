@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+﻿import { useRouter } from "expo-router";
 import { FlatList, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import type { CategoryGroup } from "../types/api";
 
@@ -42,7 +42,7 @@ function CategoryTile({ group }: { group: CategoryGroup }) {
             style={{
               color: "#FFFFFF",
               fontSize: 13,
-              fontFamily: "Inter_700Bold",
+              fontFamily: "SuisseNeue_Medium",
               lineHeight: 17,
             }}
             numberOfLines={2}
@@ -53,7 +53,7 @@ function CategoryTile({ group }: { group: CategoryGroup }) {
             style={{
               color: "rgba(255,255,255,0.65)",
               fontSize: 11,
-              fontFamily: "Inter_400Regular",
+              fontFamily: "FKGroteskNeue_Medium",
               marginTop: 2,
             }}
           >

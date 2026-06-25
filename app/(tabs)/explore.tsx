@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
@@ -41,7 +41,7 @@ export default function ExploreScreen() {
           style={{
             color: "#1B1918",
             fontSize: 28,
-            fontFamily: "Inter_700Bold",
+            fontFamily: "SuisseNeue_Medium",
           }}
         >
           Explore Projects
@@ -78,7 +78,7 @@ export default function ExploreScreen() {
                 style={{
                   color: isActive ? "#FFFFFF" : "#6A6A6A",
                   fontSize: 13,
-                  fontFamily: isActive ? "Inter_600SemiBold" : "Inter_400Regular",
+                  fontFamily: isActive ? "FKGroteskNeue_Medium" : "FKGroteskNeue_Medium",
                 }}
               >
                 {tab.label}
@@ -106,7 +106,7 @@ export default function ExploreScreen() {
             style={{
               color: "#92400E",
               fontSize: 13,
-              fontFamily: "Inter_600SemiBold",
+              fontFamily: "FKGroteskNeue_Medium",
               marginBottom: 4,
             }}
           >
@@ -116,7 +116,7 @@ export default function ExploreScreen() {
             style={{
               color: "#92400E",
               fontSize: 12,
-              fontFamily: "Inter_400Regular",
+              fontFamily: "FKGroteskNeue_Medium",
               marginBottom: 8,
             }}
             numberOfLines={2}
@@ -124,7 +124,7 @@ export default function ExploreScreen() {
             {error}
           </Text>
           <TouchableOpacity onPress={refresh}>
-            <Text style={{ color: "#1B1918", fontSize: 12, fontFamily: "Inter_600SemiBold" }}>
+            <Text style={{ color: "#1B1918", fontSize: 12, fontFamily: "FKGroteskNeue_Medium" }}>
               Tap to retry →
             </Text>
           </TouchableOpacity>
@@ -139,7 +139,7 @@ export default function ExploreScreen() {
             style={{
               color: "#6A6A6A",
               fontSize: 14,
-              fontFamily: "Inter_400Regular",
+              fontFamily: "FKGroteskNeue_Medium",
               marginTop: 16,
             }}
           >

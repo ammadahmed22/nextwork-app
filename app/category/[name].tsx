@@ -69,7 +69,7 @@ export default function CategoryScreen() {
             style={{
               color: "#FFFFFF",
               fontSize: 22,
-              fontFamily: "Inter_700Bold",
+              fontFamily: "SuisseNeue_Medium",
               lineHeight: 28,
             }}
             numberOfLines={2}
@@ -80,7 +80,7 @@ export default function CategoryScreen() {
             style={{
               color: "rgba(255,255,255,0.7)",
               fontSize: 13,
-              fontFamily: "Inter_400Regular",
+              fontFamily: "FKGroteskNeue_Medium",
               marginTop: 2,
             }}
           >
@@ -107,7 +107,7 @@ export default function CategoryScreen() {
             style={{
               color: "#92400E",
               fontSize: 13,
-              fontFamily: "Inter_600SemiBold",
+              fontFamily: "FKGroteskNeue_Medium",
               marginBottom: 4,
             }}
           >
@@ -117,7 +117,7 @@ export default function CategoryScreen() {
             style={{
               color: "#92400E",
               fontSize: 12,
-              fontFamily: "Inter_400Regular",
+              fontFamily: "FKGroteskNeue_Medium",
               marginBottom: 8,
             }}
             numberOfLines={2}
@@ -125,7 +125,7 @@ export default function CategoryScreen() {
             {error}
           </Text>
           <TouchableOpacity onPress={refresh}>
-            <Text style={{ color: "#1B1918", fontSize: 12, fontFamily: "Inter_600SemiBold" }}>
+            <Text style={{ color: "#1B1918", fontSize: 12, fontFamily: "FKGroteskNeue_Medium" }}>
               Tap to retry →
             </Text>
           </TouchableOpacity>
@@ -147,7 +147,7 @@ export default function CategoryScreen() {
                 style={{
                   color: "#6A6A6A",
                   fontSize: 14,
-                  fontFamily: "Inter_400Regular",
+                  fontFamily: "FKGroteskNeue_Medium",
                   marginTop: 16,
                 }}
               >
@@ -167,7 +167,7 @@ export default function CategoryScreen() {
                 style={{
                   color: "#1B1918",
                   fontSize: 16,
-                  fontFamily: "Inter_700Bold",
+                  fontFamily: "SuisseNeue_Medium",
                   textAlign: "center",
                   marginBottom: 6,
                 }}
@@ -178,7 +178,7 @@ export default function CategoryScreen() {
                 style={{
                   color: "#6A6A6A",
                   fontSize: 14,
-                  fontFamily: "Inter_400Regular",
+                  fontFamily: "FKGroteskNeue_Medium",
                   textAlign: "center",
                 }}
               >

@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+﻿import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
@@ -183,7 +183,7 @@ export default function LoginScreen() {
             flex: 1,
             textAlign: "center",
             fontSize: 16,
-            fontFamily: "Inter_600SemiBold",
+            fontFamily: "FKGroteskNeue_Medium",
             color: "#1B1918",
           }}
         >
@@ -212,7 +212,7 @@ export default function LoginScreen() {
             style={{
               marginTop: 16,
               fontSize: 15,
-              fontFamily: "Inter_600SemiBold",
+              fontFamily: "FKGroteskNeue_Medium",
               color: "#1B1918",
             }}
           >

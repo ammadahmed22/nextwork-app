@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+﻿import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 type IoniconsName = keyof typeof Ionicons.glyphMap;
@@ -31,7 +31,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: "#FFFFFF",
         tabBarInactiveTintColor: "#6A6A6A",
         tabBarLabelStyle: {
-          fontFamily: "Inter_600SemiBold",
+          fontFamily: "FKGroteskNeue_Medium",
           fontSize: 10,
           marginTop: 2,
         },

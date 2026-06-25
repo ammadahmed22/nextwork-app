@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+﻿import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -53,7 +53,7 @@ function GuestProfile() {
         <Text
           style={{
             fontSize: 22,
-            fontFamily: "Inter_700Bold",
+            fontFamily: "SuisseNeue_Medium",
             color: "#1B1918",
             textAlign: "center",
             marginBottom: 10,
@@ -64,7 +64,7 @@ function GuestProfile() {
         <Text
           style={{
             fontSize: 14,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "FKGroteskNeue_Medium",
             color: "#6A6A6A",
             textAlign: "center",
             lineHeight: 22,
@@ -91,7 +91,7 @@ function GuestProfile() {
             style={{
               color: "#FFFFFF",
               fontSize: 15,
-              fontFamily: "Inter_600SemiBold",
+              fontFamily: "FKGroteskNeue_Medium",
             }}
           >
             Sign In
@@ -101,7 +101,7 @@ function GuestProfile() {
         <Text
           style={{
             fontSize: 12,
-            fontFamily: "Inter_400Regular",
+            fontFamily: "FKGroteskNeue_Medium",
             color: "#9CA3AF",
             textAlign: "center",
             lineHeight: 18,
@@ -228,7 +228,7 @@ export default function ProfileScreen() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: "#6A6A6A", fontSize: 13, fontFamily: "Inter_400Regular", textAlign: "center" }}>
+              <Text style={{ color: "#6A6A6A", fontSize: 13, fontFamily: "FKGroteskNeue_Medium", textAlign: "center" }}>
                 No completed projects yet.{"\n"}Head to Explore to get started!
               </Text>
             </View>
@@ -249,7 +249,7 @@ export default function ProfileScreen() {
             }}
             accessibilityRole="button"
           >
-            <Text style={{ color: "#9CA3AF", fontSize: 14, fontFamily: "Inter_600SemiBold" }}>
+            <Text style={{ color: "#9CA3AF", fontSize: 14, fontFamily: "FKGroteskNeue_Medium" }}>
               Sign Out
             </Text>
           </TouchableOpacity>
