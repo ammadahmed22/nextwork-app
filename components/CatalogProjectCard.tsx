@@ -1,30 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
+import { categoryColor } from "../constants/colors";
 import type { CatalogProject } from "../types/api";
-
-const CATEGORY_COLORS: Record<string, string> = {
-  "Amazon VPC": "#06B6D4",
-  "Cloud Beginner Challenge": "#10B981",
-  Security: "#F59E0B",
-  Databases: "#8B5CF6",
-  Kubernetes: "#3B82F6",
-  Claude: "#EC4899",
-  "Claude Code": "#EC4899",
-  "6 Day DevOps Challenge": "#F97316",
-  "Amazon Lex Chatbot": "#6366F1",
-  DevOps: "#F97316",
-  "Three-Tier": "#06B6D4",
-  "Generative AI Developer": "#8B5CF6",
-  "AI Tooling": "#10B981",
-  "AI Second Brain": "#EC4899",
-  "Build with OpenClaw": "#06B6D4",
-  Archived: "#9CA3AF",
-};
-
-function categoryColor(cat: string): string {
-  return CATEGORY_COLORS[cat] ?? "#6A6A6A";
-}
 
 function formatCount(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}k`;

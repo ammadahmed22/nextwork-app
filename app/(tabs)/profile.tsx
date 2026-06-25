@@ -10,17 +10,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { categoryFromSlug } from "../../constants/colors";
 import { useAuth } from "../../contexts/AuthContext";
 import { usePortfolio } from "../../hooks/usePortfolio";
-
-function categoryFromSlug(slug: string): { label: string; color: string } {
-  if (slug.includes("compute")) return { label: "Compute", color: "#3B82F6" };
-  if (slug.includes("networks")) return { label: "Networking", color: "#06B6D4" };
-  if (slug.includes("security")) return { label: "Security", color: "#F59E0B" };
-  if (slug.includes("databases")) return { label: "Databases", color: "#8B5CF6" };
-  if (slug.includes("analytics")) return { label: "Analytics", color: "#EC4899" };
-  return { label: "Cloud", color: "#10B981" };
-}
 
 function relativeTime(isoDate: string): string {
   const ms = Date.now() - new Date(isoDate).getTime();

@@ -28,9 +28,13 @@ module.exports = {
         },
       },
       fontFamily: {
-        inter: ["Inter_400Regular"],
-        "inter-semi": ["Inter_600SemiBold"],
-        "inter-bold": ["Inter_700Bold"],
+        // Brand fonts
+        "fk":       ["FKGroteskNeue_Medium"],
+        "suisse":   ["SuisseNeue_Medium"],
+        // Aliases — all existing font-inter* classNames automatically use brand fonts
+        "inter":      ["FKGroteskNeue_Medium"],
+        "inter-semi": ["FKGroteskNeue_Medium"],
+        "inter-bold": ["SuisseNeue_Medium"],
       },
     },
   },
